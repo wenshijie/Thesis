@@ -42,6 +42,26 @@ def restore_percentage(pre_value, lag1_value):
     return (pre_value+1)*lag1_value
 
 
+def spilt_data(x, y, spilt=0.2, test_num=100):
+    """
+    分割数据分为训练集和测试集，如果没有指定多少为测试集就留下20%做测试集，如果给定测试集大小就按给定的分
+    :param x: 输入数据
+    :param y: 输出数据
+    :param spilt:
+    :param test_num:
+    :return: 训练集，测试集，
+    """
+    if test_num:
+        spilt = len(y)-test_num  # 余下test_num作为测试集
+    else:
+        spilt = int(len(y)*(1-spilt))
+    x_train = x[:spilt]
+    x_test = x[spilt:]
+    y_train = y[:spilt]
+    y_test = y[spilt:]
+    return x_train, y_train, x_test, y_test, spilt
+
+
 def mape(pre_value, real_value):
     """
     输入预测值和真实值计算MAPE
