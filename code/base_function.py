@@ -110,7 +110,7 @@ def rmse(pre_value, real_value):
     return math.sqrt(mse_)
 
 
-def loss_function(pre_value,real_value):
+def loss_function(pre_value, real_value):
     """
     pre_value 预测值,real_value 真实值
     输入预测值和真实值计算
