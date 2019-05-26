@@ -9,7 +9,8 @@ import numpy as np
 import time
 from base_function import seq_tf_percentage, seq_tf_matrix, restore_percentage, loss_function
 from pyhht.emd import EMD
-from lstm import lstm
+from Model import lstm
+import json
 
 test_num = 100  # 测试数据的长度
 data_use_num = 1000  # 使用的数据总长度包括训练和验证和测试
@@ -35,8 +36,8 @@ def single_emd_lstm(lag=3, num_trial=20):
     x = x[:, :-1, :]
     y = per_[-len(x):]
 
-    percentage_result = []  # 百分比结果
-    real_result = []  # 预测重构值
+    percentage_result = pd.DataFrame()  # 百分比结果
+    real_result = pd.DataFrame()  # 预测重构值
     time_ = []  # 时间
     mape, mae, mse, rmse = [], [], [], []
     for i in range(num_trial):
@@ -45,76 +46,71 @@ def single_emd_lstm(lag=3, num_trial=20):
         end_time = time.time()
         restore_value = restore_percentage(pr, data[-test_num - 1:-1])  # 还原预测值
         mape_, mae_, mse_, rmse_ = loss_function(restore_value, data[-test_num:])
-
-        percentage_result.append(pr)
-        real_result.append(restore_value)
+        # 保存第i次的结果
+        percentage_result[str(i+1)+'_times_lag'+str(lag)] = pr
+        real_result[str(i+1)+'_times_lag'+str(lag)] = restore_value
+        # 保存第i次的评估指标
         time_.append((end_time - start_time) / 60)  # 分钟
-
         mape.append(mape_)
         mae.append(mae_)
         mse.append(mse_)
         rmse.append(rmse_)
     # 预测结果
-    result = {'lag': lag, 'num_sub_sequences': len(imfs), 'percentage_result': percentage_result,
-              'real_result': real_result}
+    percentage_result['test_percentage'] = per_[-test_num:]  # 把真实的需要预测的百分比值加入
+    real_result['test_value'] = data[-test_num:]  # 把真实的需要预测的原值加入
+    percentage_result.to_csv('../result/'+name_data+'lag_'+str(lag)+'_single_emd_lstm_per_result.csv')
+    real_result.to_csv('../result/'+name_data+'lag_'+str(lag)+'_single_emd_lstm_real_result.csv')
     # 预测结果评价指标
     result_evaluation = {'lag': lag, 'num_sub_sequences': len(imfs), 'time': time_, 'mape': mape,
                          'mae': mae, 'mse': mse, 'rmse': rmse}
 
-    fw = open('../result/'+name_data+'single_emd_lstm_result.txt', 'a')
-    fw.write(str(result) + '\n')
-    fw.close()
-
-    fw = open('../result/'+name_data+'single_emd_lstm_result_evaluation.txt', 'a')
-    fw.write(str(result_evaluation) + '\n')
+    fw = open('../result/'+name_data+'single_emd_lstm_result_evaluation.json', 'a')
+    fw.write(json.dumps(result_evaluation) + '\n')
     fw.close()
 
 
 def multi_emd_lstm(lag=3, num_trial=20):
-    percentage_result = []  # 百分比结果
-    real_result = []  # 预测重构值
+    percentage_result = pd.DataFrame()  # 百分比结果
+    real_result = pd.DataFrame()  # 预测重构值
     time_ = []  # 时间
     mape, mae, mse, rmse = [], [], [], []
     for j in range(num_trial):
-        pr_ = None
-        t = 0  # 时间累积
+        pr = None
+        start_time = time.time()
         for i in range(len(imfs)):
             d = seq_tf_matrix(imfs[i], n=lag+1)
             x = d[:, :-1]
             y = d[:, -1]
             x = np.reshape(x, (x.shape[0], x.shape[1], 1))  # 转化成输入格式
-            start_time = time.time()
-            if pr_ is None:
-                pr_ = lstm(x, y, test_num=test_num)  # 预测的值,子序列预测结果
+            if pr is None:
+                pr = lstm(x, y, test_num=test_num)  # 预测的值,子序列预测结果
             else:
-                pr_ = pr_ + lstm(x, y, test_num=test_num)  # 预测的值,子序列结果直接相加
-            end_time = time.time()
-            t += (end_time - start_time)
-        restore_value = restore_percentage(pr_, data[-test_num - 1:-1])  # 还原预测值
+                pr = pr + lstm(x, y, test_num=test_num)  # 预测的值,子序列结果直接相加
+        end_time = time.time()
+        t = (end_time - start_time)
+        restore_value = restore_percentage(pr, data[-test_num - 1:-1])  # 还原预测值
         mape_, mae_, mse_, rmse_ = loss_function(restore_value, data[-test_num:])
 
-        percentage_result.append(pr_)
-        real_result.append(restore_value)
-        time_.append(t / 60)  # 分钟
+        percentage_result[str(j + 1) + '_times_lag' + str(lag)] = pr
+        real_result[str(j + 1) + '_times_lag' + str(lag)] = restore_value
 
+        time_.append(t / 60)  # 分钟
         mape.append(mape_)
         mae.append(mae_)
         mse.append(mse_)
         rmse.append(rmse_)
     # 预测结果
-    result = {'lag': lag, 'num_sub_sequences': len(imfs), 'percentage_result': percentage_result,
-              'real_result': real_result}
+    percentage_result['test_percentage'] = per_[-test_num:]  # 把真实的需要预测的百分比值加入
+    real_result['test_value'] = data[-test_num:]  # 把真实的需要预测的原值加入
+    percentage_result.to_csv('../result/' + name_data + 'lag_' + str(lag) + '_single_emd_lstm_per_result.csv')
+    real_result.to_csv('../result/' + name_data + 'lag_' + str(lag) + '_single_emd_lstm_real_result.csv')
     # 预测结果评价指标
     result_evaluation = {'lag': lag, 'num_sub_sequences': len(imfs), 'time': time_, 'mape': mape,
                          'mae': mae, 'mse': mse, 'rmse': rmse}
 
-    fw = open('../result/' + name_data + 'multi_emd_lstm_result.txt', 'a')
-    fw.write(str(result) + '\n')
+    fw = open('../result/' + name_data + 'multi_emd_lstm_result_evaluation.json', 'a')
+    fw.write(json.dumps(result_evaluation) + '\n')
     fw.close()
 
-    fw = open('../result/' + name_data + 'multi_emd_lstm_result_evaluation.txt', 'a')
-    fw.write(str(result_evaluation) + '\n')
-    fw.close()
-
-# single_emd_lstm(3,10)
-multi_emd_lstm(3,10)
+#single_emd_lstm(3, 20)
+# multi_emd_lstm(3, 20)
