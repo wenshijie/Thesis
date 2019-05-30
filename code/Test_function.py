@@ -14,7 +14,7 @@ import numpy as np
 
 def dm_test(actual_lst, pred1_lst, pred2_lst, h=1, criteria="MSE"):
     """
-
+    DM 检验
     :param actual_lst: np.array(n,)
     :param pred1_lst: np.array(n,)
     :param pred2_lst: np.array(n,)
@@ -64,6 +64,14 @@ def dm_test(actual_lst, pred1_lst, pred2_lst, h=1, criteria="MSE"):
 
 
 def wx_test(actual_lst, pred1_lst, pred2_lst, criteria="MSE"):
+    """
+    WX检验
+    :param actual_lst: 真实序列
+    :param pred1_lst: 预测结果1
+    :param pred2_lst: 预测结果2
+    :param criteria: 评价损失函数
+    :return: WX 统计量值 和p值
+    """
 
     global d1, d2
     if criteria == "MSE":
@@ -81,8 +89,8 @@ def wx_test(actual_lst, pred1_lst, pred2_lst, criteria="MSE"):
 
 if __name__ == '__main__':
     a = np.array([1, 2, 3, 4, 5])
-    a1 = np.array([1.000001, 2.000001, 3.000001, 4.000001, 5.000001])
-    a2 = np.array([1.000002, 2.000002, 3.000002, 4.000002, 5.000002])
+    a1 = np.array([1.000001, 2.000002, 3.000002, 4.000001, 5.000001])
+    a2 = np.array([1.000002, 2.000001, 3.000001, 4.000002, 5.000002])
     print(dm_test(a, a1, a2))
     print(wx_test(a, a1, a2))
 
