@@ -88,9 +88,9 @@ def wx_test(actual_lst, pred1_lst, pred2_lst, criteria="MSE"):
 
 
 if __name__ == '__main__':
-    a = np.array([1, 2, 3, 4, 5])
-    a1 = np.array([1.000001, 2.000002, 3.000002, 4.000001, 5.000001])
-    a2 = np.array([1.000002, 2.000001, 3.000001, 4.000002, 5.000002])
+    a = np.array([1, 2, 3, 4])
+    a1 = np.array([1.001, 1.002, 1.003, 1.004])
+    a2 = np.array([1.01, 1.02, 1.03, 1.04])
     print(dm_test(a, a1, a2))
     print(wx_test(a, a1, a2))
 

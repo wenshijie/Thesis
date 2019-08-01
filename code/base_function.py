@@ -23,23 +23,25 @@ def seq_tf_matrix(sequence, n=4):
     return samples
 
 
-def seq_tf_percentage(sequence):
+def data_trans(sequence):
     """
     把一个序列转换为变化率百分比[y(t+1)-y(t)]/y(t),返回结果长度减1
     :param sequence: numpy.array(len(sequence),)
     :return: numpy.array(len(sequence)-1,)
     """
-    return (sequence[1:]-sequence[:-1])/sequence[:-1]
+    # return (sequence[1:]-sequence[:-1])/sequence[:-1]
+    return sequence[1:]-sequence[:-1]  # 差分一个序列
 
 
-def restore_percentage(pre_value, lag1_value):
+def restore_data(pre_value, lag1_value):
     """
     使用预测的百分比值和滞后一天的值还原实际预测值pre_y(t+1) = (pre_per+1)*y(t)
     :param pre_value: 预测值 numpy.array(len(pre_value),)
     :param lag1_value: 滞后值 numpy.array(len(lag1_value),)
     :return: numpy.array(len(lag1_value),)
     """
-    return (pre_value+1)*lag1_value
+    # return (pre_value+1)*lag1_value  # 去百分比时收敛速度快，但结果（多次试验的均值）比差分稍差一点。
+    return pre_value+lag1_value  # 取差分时，将预测的差分结果，还原成真实预测值
 
 
 def spilt_data(x, y, spilt=0.2, test_num=100):

@@ -6,7 +6,7 @@ Created on =2019-05-23
 """
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense, LSTM
+from keras.layers import Dense, LSTM, Dropout
 from keras import backend as k
 from base_function import spilt_data
 from statsmodels.tsa.arima_model import ARMA
@@ -14,41 +14,56 @@ import sys
 from matplotlib import pyplot as plt
 
 
-def lstm(x, y, test_num=100, spilt=0.2):
+def lstm(x, y, test_num=100, spilt=0.2, batch_size=32, epochs=20, hidden=128):
     """
     输入处理好格式的input（sample,lag,dim）,output(sample,output_dim)
+    :param hidden: 隐藏层的节点数
+    :param epochs: 训练多少轮，样本多时小一点，样本少时多一点
+    :param batch_size: 没批次多少样本
     :param x: 输入
     :param y: 输出
     :param test_num:预测值的数量 优先
     :param spilt: 预测值占所有值的百分比 优先级低于test_num
-    :return:
+    :return: np.array(len,)
     """
     x_train, y_train, x_test, y_test, _ = spilt_data(x, y, spilt=spilt, test_num=test_num)
     k.clear_session()
     model = Sequential()
-    model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2, input_shape=(x_train.shape[1], x_train.shape[2])))
+    model.add(LSTM(hidden, dropout=0.2, recurrent_dropout=0.2, input_shape=(x_train.shape[1], x_train.shape[2])))
     model.add(Dense(1, activation='linear'))
     model.compile(loss='mse', optimizer='rmsprop')
-    history = model.fit(x_train, y_train, batch_size=32, epochs=20, validation_data=(x_test, y_test))
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('Model loss')
-    plt.ylabel('Loss')
-    plt.xlabel('Epoch')
-    plt.legend(['Train', 'Test'], loc='upper left')
-    plt.show()
+    history = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
+    # plt.plot(history.history['loss'])
+    # plt.plot(history.history['val_loss'])
+    # plt.title('Model loss')
+    # plt.ylabel('Loss')
+    # plt.xlabel('Epoch')
+    # plt.legend(['Train', 'Test'], loc='upper left')
+    # plt.show()
     # 返回预测值（len(x_text),）numpy.array
     return np.reshape(model.predict(x_test), (len(x_test),))
 
 
-def ann(x, y, test_num=100, spilt=0.2, hidden=128):
+def ann(x, y, test_num=100, spilt=0.2, hidden=128, batch_size=32, epochs=20):
+    """
+    输入处理好格式的input（sample,lag,dim）,output(sample,output_dim)
+    :param hidden: 隐藏层的节点数
+    :param epochs: 训练多少轮，样本多时小一点，样本少时多一点
+    :param batch_size: 没批次多少样本
+    :param x: 输入
+    :param y: 输出
+    :param test_num:预测值的数量 优先
+    :param spilt: 预测值占所有值的百分比 优先级低于test_num
+    :return: np.array(len,)
+    """
     x_train, y_train, x_test, y_test, _ = spilt_data(x, y, spilt=spilt, test_num=test_num)
     k.clear_session()
     model = Sequential()
     model.add(Dense(hidden, activation='relu', input_shape=(x_train.shape[1],)))
+    model.add(Dropout(0.4))
     model.add(Dense(1, activation='linear'))
     model.compile(optimizer='rmsprop', loss='mse')
-    history = model.fit(x_train, y_train, epochs=20, batch_size=8, validation_data=(x_test, y_test))
+    history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test))
     # plt.plot(history.history['loss'])
     # plt.plot(history.history['val_loss'])
     # plt.title('Model loss')
@@ -59,11 +74,11 @@ def ann(x, y, test_num=100, spilt=0.2, hidden=128):
     return np.reshape(model.predict(x_test), (len(x_test),))
 
 
-def proper_model(data_ts, maxlag=15):
+def select_arma_model(data_ts, maxlag=15):
     """
     输入时间序列，并选择最优ARMA模型,依据BIC信息准则进行模型调优,p,q<=15
     :param data_ts: 时间序列
-    :param maxLag: pq的最大值
+    :param maxlag: pq的最大值
     :return: bic_value,p,q,model
     """
     init_bic = sys.maxsize
