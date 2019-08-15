@@ -57,11 +57,51 @@ def get_json(result_folder='result', data_name='000001', model_name='only_ann'):
               "%.2f" % mean(rmse_))
 
 
-'''
-get_json(result_folder='result', data_name='000001', model_name='only_ann')
-get_json(result_folder='result', data_name='000001', model_name='single_emd_ann')
-get_json(result_folder='result', data_name='000001', model_name='single_emd_ann')
-'''
-get_json(result_folder='result', data_name='sp500', model_name='only_ann')
-get_json(result_folder='result', data_name='sp500', model_name='multi_emd_ann')
-get_json(result_folder='result', data_name='sp500', model_name='single_emd_ann')
+# data_name = '000001'
+# result_folder = 'result'
+# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
+
+# data_name = 'sp500'
+# result_folder = 'result'
+# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
+
+# data_name = '000001_comparison'
+# result_folder = 'result'
+# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
+
+# data_name = 'sp500_comparison'
+# result_folder = 'result'
+# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
+
+# data_name = 'hs300_comparison'
+# result_folder = 'result'
+# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
+
+# data_name = '000001'
+# result_folder = 'adaptive_result_ignore_0'
+# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_aann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_aann')
+# result_folder = 'adaptive_result_ignore_2'
+# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_aann')
+# get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_aann')
+
+
+data_name = 'sp500'
+result_folder = 'adaptive_result_ignore_0'
+get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
+get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_aann')
+get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_aann')
+result_folder = 'adaptive_result_ignore_2'
+get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_aann')
+get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_aann')

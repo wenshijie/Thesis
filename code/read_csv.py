@@ -31,41 +31,45 @@ def get_csv(result_folder='result', data_name='000001', lag=3, model_name='multi
 
 '''
 #  000001 DM WX 检验
+cri = 'MAPE'
 df_multi = pd.DataFrame()
 df_single = pd.DataFrame()
 df_real = pd.DataFrame()
 lags = [3, 4, 5, 6, 7, 8, 9]
+print(cri)
 print('lag | DM  | WX ')
 for lag in lags:
     df_multi_mean, df_real = get_csv(result_folder='result', data_name='000001', lag=lag, model_name='multi_emd_ann')
-    df_single_mean, _ = get_csv(result_folder='result', data_name='000001', lag=3, model_name='single_emd_ann')
+    df_single_mean, _ = get_csv(result_folder='result', data_name='000001', lag=lag, model_name='single_emd_ann')
     df_multi[str(lag)] = df_multi_mean
     df_single[str(lag)] = df_single_mean
     print(' {} '.format(lag),
-          "%.3f" % dm_test(df_real, df_multi_mean, df_single_mean, criteria='MAPE')[1],
-          "%.3f" % wx_test(df_real, df_multi_mean, df_single_mean, criteria='MAPE')[1])
+          "%.3f" % dm_test(df_real, df_multi_mean, df_single_mean, criteria=cri)[1],
+          "%.3f" % wx_test(df_real, df_multi_mean, df_single_mean, criteria=cri)[1])
 print('mean',
-      "%.3f" % dm_test(df_real, df_multi.mean(axis=1), df_single.mean(axis=1), criteria='MAPE')[1],
-      "%.3f" % wx_test(df_real, df_multi.mean(axis=1), df_single.mean(axis=1), criteria='MAPE')[1])
+      "%.3f" % dm_test(df_real, df_multi.mean(axis=1), df_single.mean(axis=1), criteria=cri)[1],
+      "%.3f" % wx_test(df_real, df_multi.mean(axis=1), df_single.mean(axis=1), criteria=cri)[1])
 '''
-
+data_name = '000001'
+cri = 'MSE'
 #  sp500 DM WX 检验
 df_multi = pd.DataFrame()
 df_single = pd.DataFrame()
 df_real = pd.DataFrame()
 lags = [3, 4, 5, 6, 7, 8, 9]
+print(cri)
 print('lag | DM  | WX ')
 for lag in lags:
-    df_multi_mean, df_real = get_csv(result_folder='result', data_name='sp500', lag=lag, model_name='multi_emd_ann')
-    df_single_mean, _ = get_csv(result_folder='result', data_name='sp500', lag=3, model_name='single_emd_ann')
+    df_multi_mean, df_real = get_csv(result_folder='result', data_name=data_name, lag=lag, model_name='multi_emd_ann')
+    df_single_mean, _ = get_csv(result_folder='result', data_name=data_name, lag=lag, model_name='single_emd_ann')
     df_multi[str(lag)] = df_multi_mean
     df_single[str(lag)] = df_single_mean
     print(' {} '.format(lag),
-          "%.3f" % dm_test(df_real, df_multi_mean, df_single_mean, criteria='MAPE')[1],
-          "%.3f" % wx_test(df_real, df_multi_mean, df_single_mean, criteria='MAPE')[1])
+          "%.3f" % dm_test(df_real, df_multi_mean, df_single_mean, criteria=cri)[1],
+          "%.3f" % wx_test(df_real, df_multi_mean, df_single_mean, criteria=cri)[1])
 print('mean',
-      "%.3f" % dm_test(df_real, df_multi.mean(axis=1), df_single.mean(axis=1), criteria='MAPE')[1],
-      "%.3f" % wx_test(df_real, df_multi.mean(axis=1), df_single.mean(axis=1), criteria='MAPE')[1])
+      "%.3f" % dm_test(df_real, df_multi.mean(axis=1), df_single.mean(axis=1), criteria=cri)[1],
+      "%.3f" % wx_test(df_real, df_multi.mean(axis=1), df_single.mean(axis=1), criteria=cri)[1])
 
 
 

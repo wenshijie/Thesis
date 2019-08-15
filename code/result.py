@@ -14,9 +14,9 @@ import json
 import os
 
 batch_size = 32  # 每多少个样本更新一下参数
-test_num = 300  # 测试数据的长度
+test_num = 50  # 测试数据的长度
 # data_use_num = 1000  # 使用数据的长度可以只使用一定量的数据
-name_data = '000001'  # 数据
+name_data = 'sp500'  # 数据
 path = '../data/'+name_data+'.csv'  # 数据的地址
 
 if not os.path.exists('../result/'+name_data):  # 对应数据结果保存
@@ -313,4 +313,4 @@ def multi_emd_ann(lag=3, num_trial=20, hidden=128, epochs=20):
 #     multi_emd_lstm(lag, 2)
 # single_emd_lstm(3, 2, epochs=20)
 # single_emd_lstm(3, 5, epochs=30)
-single_emd_ann(3, 1)
+# single_emd_ann(3, 1)

@@ -25,7 +25,7 @@ def seq_tf_matrix(sequence, n=4):
 
 def data_trans(sequence):
     """
-    把一个序列转换为变化率百分比[y(t+1)-y(t)]/y(t),返回结果长度减1
+    差分一个序列[y(t+1)-y(t)],返回结果长度减1
     :param sequence: numpy.array(len(sequence),)
     :return: numpy.array(len(sequence)-1,)
     """
