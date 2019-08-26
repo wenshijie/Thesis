@@ -71,20 +71,14 @@ def get_json(result_folder='result', data_name='000001', model_name='only_ann'):
 
 # data_name = '000001_comparison'
 # result_folder = 'result'
-# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
-# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_ann')
 # get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
 
 # data_name = 'sp500_comparison'
 # result_folder = 'result'
-# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
-# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_ann')
 # get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
 
 # data_name = 'hs300_comparison'
 # result_folder = 'result'
-# get_json(result_folder=result_folder, data_name=data_name, model_name='only_ann')
-# get_json(result_folder=result_folder, data_name=data_name, model_name='multi_emd_ann')
 # get_json(result_folder=result_folder, data_name=data_name, model_name='single_emd_ann')
 
 # data_name = '000001'

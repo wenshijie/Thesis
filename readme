@@ -2,3 +2,12 @@
 基本模型model
 后视实验有result.py运行得到
 预测实验（自适应结果）有adaptive_result.py运行得到
+
+表 3-5,3-6 由code\read_csv.py得到
+表3-7,3-8,3-9 由code\Comparison_similar.py以及code\read_json.py得到
+
+图4-1 由H:code\image_ look_ahead_bias.py
+图4-2,4-3 image\A_EMD_ANN.vsdx image\S_A_EMD_ANN.vsdx
+
+附录1 由code\test_arima.py和result\000001\arima_result_evaluation.json以及H:result\sp500\arima_result_evaluation.json 得到
+附录2 由code\image.py得到
